@@ -50,7 +50,7 @@ given FunctorK[WeatherDataHK]
 
 3) A `Monoid` instance for `WeatherDataHK[List]` or `WeatherDataHK[Set]`.
 
-With this in place, it is possible to define extension methods on sequences containing higher kind data. For example, `mconcat` has a type parameter `G` which selects the aggregating monoid. In addition, with a given instance for `IsoK` ( representing a higher-kinded isomorphism), it is possible to define `mconcatVia` which performance the aggregation via the selected monoid.
+With this in place, it is possible to define extension methods on sequences containing higher-kinded data. For example, `mconcat` has a type parameter `G` which selects the aggregating monoid. In addition, with a given instance for `IsoK` (representing a higher-kinded isomorphism), it is possible to define `mconcatVia` which performs the aggregation via the selected monoid.
  
  
 ```scala
@@ -117,7 +117,7 @@ val res12: WeatherDataHK[[A] => A] = WeatherDataHK(126.10000000000001,104.199999
 scala> completeWeatherData.mconcatVia[Product]                                                                 
 val res13: WeatherDataHK[[A] => A] = WeatherDataHK(9944562.640319997,3914147.3976,39424)
 ```
-Many other aggregating monoids can be defined allowing a wide variety of  useful aggregations to be performed using this approach.
+Many other aggregating monoids can be defined allowing a wide variety of useful aggregations to be performed using this approach.
 
 ## Possible improvements
 
