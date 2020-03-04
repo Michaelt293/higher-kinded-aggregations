@@ -1,7 +1,7 @@
-case class Counts[A](getCounts: Map[A, Int])
+case class Counts[A](getCounts: Map[A, Int]) extends AnyVal
 
 object Counts
-  given firstMonoid[A] as Monoid[Counts[A]]
+  given countsMonoid[A] as Monoid[Counts[A]]
     def combine(x: Counts[A], y: Counts[A]): Counts[A] =
       x.getCounts.foldLeft(y) { case (acc, (k, v)) =>
         Counts(acc.getCounts + ((k, v + acc.getCounts.getOrElse(k, 0))))

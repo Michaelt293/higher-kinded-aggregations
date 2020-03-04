@@ -8,6 +8,5 @@ lazy val root = project
 
     scalaVersion := dottyVersion,
 
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test",
-    libraryDependencies += "org.me" %% "shapeless-core" % "3.0.0-SNAPSHOT"
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
   )

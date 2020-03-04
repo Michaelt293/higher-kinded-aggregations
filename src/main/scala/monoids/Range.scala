@@ -3,7 +3,7 @@ case class Range[A](minValue: Option[A], maxValue: Option[A])
 object Range
   import Monoid.{given _}
 
-  given maxMonoid[A](using O: Ordering[A]) as Monoid[Range[A]]
+  given rangeMonoid[A](using O: Ordering[A]) as Monoid[Range[A]]
     def combine(x: Range[A], y: Range[A]): Range[A] =
       val minValue =
         (x.minValue, y.minValue) match

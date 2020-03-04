@@ -8,21 +8,15 @@ object Monoid
     def combine(x: String, y: String): String = x + y
     def unit: String = ""
 
-  given Monoid[Int]
-    def combine(x: Int, y: Int): Int = x + y
-    def unit: Int = 0
-
-  given Monoid[Double]
-    def combine(x: Double, y: Double): Double = x + y
-    def unit: Double = 0.0D
+  given numericMonoid[N](using N: Numeric[N]) as Monoid[N]
+    def combine(x: N, y: N): N = N.plus(x, y)
+    def unit: N = N.zero
 
   given optionMonoid[A](using M: Monoid[A]) as Monoid[Option[A]]
     def combine(x: Option[A], y: Option[A]): Option[A] =
       (x, y) match
         case (Some(x_), Some(y_)) => Some(M.combine(x_, y_))
-        case (Some(x_), None) => Some(x_)
-        case (None, Some(y_)) => Some(y_)
-        case (None, None) => None
+        case (x_, y_) => x_.orElse(y_)
 
     def unit: Option[A] = None
 
@@ -37,3 +31,24 @@ object Monoid
       x ++ y
 
     def unit: Set[A] = Set.empty[A]
+
+  given tuple2Monoid[A, B](
+    using
+    MA: Monoid[A],
+    MB: Monoid[B]
+    ) as Monoid[(A, B)]
+    def combine(x: (A, B), y: (A, B)): (A, B) =
+      (MA.combine(x._1, y._1), MB.combine(x._2, y._2))
+
+    def unit: (A, B) = (MA.unit, MB.unit)
+
+  given tuple3Monoid[A, B, C](
+    using
+    MA: Monoid[A],
+    MB: Monoid[B],
+    MC: Monoid[C]
+    ) as Monoid[(A, B, C)]
+    def combine(x: (A, B, C), y: (A, B, C)): (A, B, C) =
+      (MA.combine(x._1, y._1), MB.combine(x._2, y._2), MC.combine(x._3, y._3))
+
+    def unit: (A, B, C) = (MA.unit, MB.unit, MC.unit)

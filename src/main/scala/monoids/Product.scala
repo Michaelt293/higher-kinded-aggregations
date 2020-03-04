@@ -1,26 +1,18 @@
-opaque type Product[N] = Option[N]
+case class Product[N](getProduct: N)
 
 object Product
-  import Monoid.{given _}
-
-  given sumMonoid[N](using N: Numeric[N]) as Monoid[Product[N]]
+  given productMonoid[N](using N: Numeric[N]) as Monoid[Product[N]]
     def combine(x: Product[N], y: Product[N]): Product[N] =
-      (x, y) match
-        case (Some(x_), Some(y_)) => Some(N.times(x_, y_))
-        case (x_, y_) => x_.orElse(y_)
+      Product(N.times(x.getProduct, y.getProduct))
 
-    def unit = None
+    def unit = Product(N.plus(N.zero, N.fromInt(1)))
 
-  given FunctionK[Id, Product]
+  given IsoK[Id, Product]
     def apply[A](id: Id[A]): Product[A] =
-      Some(id)
+      Product(id)
 
-  given IsoK[Option, Product]
-    def apply[A](option: Option[A]): Product[A] =
-      option
-
-    def from: FunctionK[Product, Option] =
-      new FunctionK[Product, Option] {
-        def apply[A](product: Product[A]): Option[A] =
-          product
+    def from: FunctionK[Product, Id] =
+      new FunctionK[Product, Id] {
+        def apply[A](product: Product[A]): Id[A] =
+          product.getProduct
       }

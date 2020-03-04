@@ -5,9 +5,6 @@ case class WeatherDataHK[F[_]](
 )
 
 object WeatherDataHK
-  import FunctionK.{given _}
-  import Monoid.{given _}
-
   type WeatherData = WeatherDataHK[Id]
   type OptionWeatherData = WeatherDataHK[Option]
 
@@ -23,7 +20,8 @@ object WeatherDataHK
   given weatherDataHKMonoid[F[_]](
     using 
     MD: Monoid[F[Double]],
-    MI: Monoid[F[Int]]) as Monoid[WeatherDataHK[F]]
+    MI: Monoid[F[Int]]
+    ) as Monoid[WeatherDataHK[F]]
     def combine(x: WeatherDataHK[F], y: WeatherDataHK[F]): WeatherDataHK[F] =
       WeatherDataHK[F](
         MD.combine(x.temp, y.temp), 
